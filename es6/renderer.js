@@ -117,6 +117,7 @@ class PuppeteerRenderer {
                         navigationOptions = options.navigationOptions;
                     }
                     navigationOptions.waituntil = "networkidle0";
+                    navigationOptions.timeout = 0;
 
                     await page.goto(`${baseURL}${route}`, navigationOptions);
 
