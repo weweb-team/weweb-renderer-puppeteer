@@ -115,7 +115,10 @@ class PuppeteerRenderer {
                 navigationOptions = options.navigationOptions;
             }
             navigationOptions.waituntil = "networkidle0";
+            navigationOptions.timeout = 0;
 
+            console.log(`\nRoute started : ${route}`);
+            const timeStart = Date.now();
             await page.goto(`${baseURL}${route}`, navigationOptions);
 
             // Wait for some specific element exists
@@ -125,6 +128,7 @@ class PuppeteerRenderer {
             }
             // Once this completes, it's safe to capture the page contents.
             await page.evaluate(waitForRender, this._rendererOptions);
+            console.log(`\nRoute done : ${route} - ${(Date.now() - timeStart) / 1000}s`);
 
             const result = {
                 originalRoute: route,
