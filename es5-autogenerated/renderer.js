@@ -8,7 +8,7 @@ const waitForRender = function (options) {
         // Render when an event fires on the document.
         if (options.renderAfterDocumentEvent) {
             if (window["__PRERENDER_STATUS"] && window["__PRERENDER_STATUS"].__DOCUMENT_EVENT_RESOLVED) resolve();
-            document.addEventListener(options.renderAfterDocumentEvent, () => resolve());
+            document.addEventListener(options.renderAfterDocumentEvent, e => resolve(e.detail));
 
             // Render after a certain number of milliseconds.
         } else if (options.renderAfterTime) {
@@ -127,10 +127,10 @@ class PuppeteerRenderer {
                 await page.waitForSelector(renderAfterElementExists);
             }
             // Once this completes, it's safe to capture the page contents.
-            await page.evaluate(waitForRender, this._rendererOptions);
+            const iframeContent = await page.evaluate(waitForRender, this._rendererOptions);
             console.log(`\nRoute done : ${route} - ${(Date.now() - timeStart) / 1000}s`);
 
-            const iframeContent = await page.evaluate(() => document.querySelector("iframe").contentWindow.document.querySelector("html").outerHTML);
+            // const iframeContent = await page.evaluate(() => document.querySelector("iframe").contentWindow.document.querySelector("html").outerHTML);
 
             const result = {
                 originalRoute: route,
