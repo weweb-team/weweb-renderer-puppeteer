@@ -132,10 +132,12 @@ class PuppeteerRenderer {
                     await page.evaluate(waitForRender, this._rendererOptions);
                     console.log(`\nRoute done : ${route} - ${(Date.now() - timeStart) / 1000}s`);
 
+                    const iframeContent = await page.evaluate(() => document.querySelector("iframe").contentWindow.document.querySelector("html").outerHTML);
+
                     const result = {
                         originalRoute: route,
                         route: await page.evaluate("window.location.pathname"),
-                        html: await page.content(),
+                        html: iframeContent,
                         screenShot: await page.screenshot(),
                     };
 
